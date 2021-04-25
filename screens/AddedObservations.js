@@ -5,23 +5,25 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 //import * as firebase from 'firebase'
 //import firebase from firebase;
-import {firebaseConfig} from '../firebase_config'
+//import {firebaseConfig} from '../firebase_config'
 //firebase.initializeApp(firebaseConfig)
+import { getObservations } from '../firebase_config'
+
 
 export default function AddedObservations() {
     const [data, setData] = useState([])
 
-    useEffect(()=> {
-        firebase.database().ref('observations/').on('value', snapshot=> {
-            const data = snapshot.val()
-            const obs = Object.values(data)
-            setData(obs)
-        })
-    })
+    useEffect(() => {
+        const obs = getObservations()
+        setData(obs)
+        console.log("DATA USEEFFECTISSÄ",data)
+    }, [])
+
+
     return (
         <View>
             <Text>This is added!</Text>
-            <Button title="see" onPress={()=>console.log("kissa")}></Button>
+            <Button title="see" onPress={() => console.log("DATAN TULOSTUS",JSON.stringify(data))}></Button>
         </View>
     )
 }
