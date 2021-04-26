@@ -5,15 +5,18 @@ import { Button, Icon } from 'react-native-elements';
 //import * as Permissions from 'expo-Permissions'
 import { Camera } from 'expo-camera';
 //import ConfirmPicture from './ConfirmPicture'
+import ImagePicker from 'react-native-image-picker'
+//var ImagePicker = require('react-native-image-picker')
 
 export default function AddPicture({ route, navigation, navigation: { setParams } }) {
 
     const [hasCameraPermission, setCameraPermission] = useState(null)
-    const [photoName, setPhotoname] = useState('') //tiedostoviittaus
-    const [photoBase64, setPhotoBase64] = useState('') // kuvan siältö encoded
+    const [photoName, setPhotoname] = useState(null) //tiedostoviittaus
+    const [photoBase64, setPhotoBase64] = useState(null) // kuvan siältö encoded
     const { observation } = route.params
     const Observation = observation
-    console.log("PROPSIT KAMERASSA", observation)
+    //console.log("PROPSIT KAMERASSA", observation)
+    const [photoTaken, setPhotoTaken] = useState(false)
 
     const camera = useRef(null)
     const [isCameraVisible, setCameraVisible] = useState(false)
@@ -36,11 +39,16 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
     const snap = async () => {
         if (camera) {
             const photo = await camera.current.takePictureAsync({ base64: true })
-            setPhotoname(await photo.uri)
-            setPhotoBase64(await photo.base64)
+            const uri = await photo.uri
+            const base64 = await photo.base64
+            //console.log(uri)
+            //console.log(base64)
+            setPhotoname(await uri)
+            setPhotoBase64(await base64)
+            setPhotoTaken(true)
             setCameraVisible(false)
-            const Observation = {
-                picture: { photoName: 'PHOTONAME', photoBase64: `PHOTOBASE` },
+            {/*const Observation = {
+                picture: { photoName: { uri }, photoBase64: { base64 } },
                 species: observation.species,
                 place: observation.place,
                 time: observation.time,
@@ -48,8 +56,11 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
                 quantity: observation.quantity,
                 weather: observation.weather
             }
-            navigation.navigate('ConfirmPicture', { observation: Observation })
+            console.log("Observationin kuva", Observation.picture.photoNamephotoName)
+            //console.log("Observationin 64", Observation.picture.photoBase64)
+            navigation.navigate('ConfirmPicture', { observation: Observation }) */}
         }
+
     }
 
     /*const confirmPicture = () => {
@@ -61,13 +72,85 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
         )
     }*/
 
-    if (isCameraVisible) {
+    const openGallery = async () => {
+
+        ImagePicker.launchImageLibrary(options, (response) => {
+            console('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            }
+            else {
+                setPhotoname({ fileURL: response.uri });
+                setPhotoTaken(true)
+            }
+        });
+    }
+
+    const uploadImage = async () => {
+        const picker = ImagePicker()
+        const pickedFile = await picker.getImage({ source: ImageSource.gallery })
+        setPhotoname(pickedFile)
+    }
+
+    const savePicture = () => {
+        console.log("SNAPISSA KUVAN OSOSITE", photoName)
+    }
+
+    const renderCamera = () => {
         return (
             <View style={{ flex: 1 }}>
                 <Camera style={{ flex: 4, height: 500, width: 400 }} ref={camera}></Camera>
                 <Button title="Take picture" onPress={snap}></Button>
             </View>
         )
+
+    }
+
+    const renderFrontPage = () => {
+        return (
+            <View style={{ alignItems: 'center' }}>
+                <View style={styles.buttonandicon}>
+                    <Icon type="font-awesome-5" name="camera-retro" size={80} onPress={() => setCameraVisible(true)}></Icon>
+                    <Text style={{ color: '#C7BABA' }}>Ota kuva!</Text>
+                </View>
+
+                <View style={styles.buttonandicon}>
+                    <Icon type="font-awesome-5" name="cloud-upload-alt" size={80} onPress={() => uploadImage()}></Icon>
+                    <Text style={{ color: '#C7BABA' }}>Lataa kuva!</Text>
+                </View>
+            </View>
+        )
+    }
+
+    const renderPicture = () => {
+        return (
+            <View>
+                <View>
+                    <Text>Oletko tyytyväinen?</Text>
+                </View>
+                <Image style={{ height: 170, width: 200 }} source={{ uri: photoName }}></Image>
+                <Image style={{ height: 170, width: 200 }} source={{ uri: `data:image/gif;base64,${photoBase64}` }}></Image>
+                <View style={{ flexDirection: 'row' }}>
+                    <Button title="Take new" onPress={() => renderCamera()}></Button>
+                    <Button title="Confirm" onPress={() => savePicture()}></Button>
+                    {/*<Button title="Confirm" onPress={() => navigation.navigate('AddName', { observation: Observation })}></Button>*/}
+                </View>
+            </View>
+        )
+
+    }
+
+    /* photoName ? renderPicture()
+                    : (
+                        <View>
+                            {hasCameraPermission ? (renderFrontPage()) : (<Text>No permission to use camera!</Text>)}
+                        </View >
+                    )*/
+
+    if (isCameraVisible) {
+        return (renderCamera())
+
     } else {
         return (
             <View style={styles.container}>
@@ -75,25 +158,15 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
                     <Text style={{ color: '#C7BABA' }}>Add bird 1/7</Text>
                     <Text style={{ fontSize: 20 }}>Onko havainnostasi kuvaa?</Text>
                 </View>
-                <View>
-                    {hasCameraPermission ?
-                        (<View style={{ alignItems: 'center' }}>
-                            <View style={styles.buttonandicon}>
-                                <Icon type="font-awesome-5" name="camera-retro" size={80} onPress={() => setCameraVisible(true)}></Icon>
-                                <Text style={{ color: '#C7BABA' }}>Ota kuva!</Text>
-                            </View>
-
-                            <View style={styles.buttonandicon}>
-                                <Icon type="font-awesome-5" name="cloud-upload-alt" size={80}></Icon>
-                                <Text style={{ color: '#C7BABA' }}>Lataa kuva!</Text>
-                            </View>
-                        </View>
-                        ) : (<Text>No permission to use camera!</Text>)}
-                </View >
-                <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} title="Seuraava" onPress={()=> navigation.navigate('AddName', { observation: Observation })}></Button>
+                {photoTaken ? renderPicture()
+                    : (
+                        <View>
+                            {hasCameraPermission ? (renderFrontPage()) : (<Text>No permission to use camera!</Text>)}
+                        </View >
+                    )
+                }
+                <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} title="Seuraava" onPress={() => navigation.navigate('AddName', { observation: Observation })}></Button>
             </View>
-
-
         )
     }
 
