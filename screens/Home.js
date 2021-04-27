@@ -9,7 +9,7 @@ import Name from './addobservation/AddName';
 export default function Home({navigation}) {
 
   const Observation = {
-    picture:{photoName:'', photoBase64: ''},
+    photoName:'',
     species:'',
     place:'',
     time:'',

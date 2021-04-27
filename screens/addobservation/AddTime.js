@@ -40,7 +40,7 @@ export default function AddTime({ route, navigation }) {
 
     const navigateToAddSexAndQuantity = () => {
         const Observation = {
-            picture: { photoName: observation.picture.photoName, photoBase64: observation.picture.photoBase64 },
+            photoname: observation.photoname,
             species: observation.species,
             place: observation.place,
             time: `${date}`,

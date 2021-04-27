@@ -11,7 +11,6 @@ import Map from './components/Mapview'
 import CreateAccount from './screens/CreateAccount'
 
 import AddPicture from './screens/addobservation/AddPicture';
-import ConfirmPicture from './screens/addobservation/ConfirmPicture';
 import AddName from './screens/addobservation/AddName';
 import AddPlace from './screens/addobservation/AddPlace'
 import AddTime from './screens/addobservation/AddTime';
@@ -29,7 +28,6 @@ function HomeNavigator() {
     <Stack.Navigator>
       <Stack.Screen name="home" component={Home}></Stack.Screen>
       <Stack.Screen name="AddPicture" component={AddPicture} ></Stack.Screen>
-      <Stack.Screen name="ConfirmPicture" component={ConfirmPicture} ></Stack.Screen>
       <Stack.Screen name="AddName" component={AddName} ></Stack.Screen>
       <Stack.Screen name="AddPlace" component={AddPlace} ></Stack.Screen>
       <Stack.Screen name="AddTime" component={AddTime} ></Stack.Screen>

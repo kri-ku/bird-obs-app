@@ -13,7 +13,7 @@ export default function AddName({ route, navigation }) {
     const moveToAddPlace =()=> {
         console.log("MUUTTUNUT LAJI", species)
         const Observation = {
-            picture: { photoName: observation.picture.photoName, photoBase64: observation.picture.photoBase64 },
+            photoname: observation.photoname,
             species: `${species}`,
             place: observation.place,
             time: observation.time,

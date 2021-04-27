@@ -47,7 +47,7 @@ export default function AddWeather({ route, navigation }) {
         const nameList = weatherList.map(box => box.title) //TOIMI combine?
 
         const Observation = {
-            picture: { photoName: observation.picture.photoName, photoBase64: observation.picture.photoBase64 },
+            photoname: observation.photoname,
             species: observation.species,
             place: observation.place,
             time: observation.time,

@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": null,
-  "packagerPort": null,
+  "expoServerPort": 19000,
+  "packagerPort": 19000,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerNgrokUrl": "https://tj-y9b.anonymous.bird-observation-app.exp.direct",
+  "packagerNgrokUrl": "https://packager.tj-y9b.anonymous.bird-observation-app.exp.direct",
+  "ngrokPid": 163233,
   "webpackServerPort": null
 }

@@ -59,7 +59,7 @@ export default function AddPlace({ route, navigation }) {
 
     const navigateToAddTime = () => {
         const Observation = {
-            picture: { photoName: observation.picture.photoName, photoBase64: observation.picture.photoBase64 },
+            photoname: observation.photoname,
             species: observation.species,
             place: `${address}`,
             time: observation.time,

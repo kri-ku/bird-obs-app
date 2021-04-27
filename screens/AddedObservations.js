@@ -17,10 +17,11 @@ export default function AddedObservations() {
     useEffect(() => {
         const obs = getObservations()
         setData(obs)
-        console.log("DATA USEEFFECTISSÄ",data)
+        //console.log("DATA USEEFFECTISSÄ",data)
     }, [])
 
     const renderItem =(observation)=> {
+        // large xlarge
         return(
             <ListItem key={observation.id} bottomDivider>
                 <Avatar rounded size="large" source={require('../pictures/avatar2.png')}></Avatar>
@@ -41,7 +42,7 @@ export default function AddedObservations() {
             renderItem={({item}) => renderItem(item)}
             keyExtractor={obs => obs.id}>
             </FlatList>
-            <Button title="see" onPress={() => console.log("DATAN TULOSTUS",typeof(data))}></Button>
+           {/* <Button title="see" onPress={() => console.log("DATAN TULOSTUS",typeof(data))}></Button> */}
         </View>
     )
 }

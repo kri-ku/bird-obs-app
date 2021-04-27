@@ -5,27 +5,44 @@ import { Button, Icon } from 'react-native-elements';
 //import * as Permissions from 'expo-Permissions'
 import { Camera } from 'expo-camera';
 //import ConfirmPicture from './ConfirmPicture'
-import ImagePicker from 'react-native-image-picker'
+//import ImagePicker from 'react-native-image-picker'
 //var ImagePicker = require('react-native-image-picker')
+//import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker'
+import { savePicture } from '../../firebase_config'
 
 export default function AddPicture({ route, navigation, navigation: { setParams } }) {
 
+    // TODO POISTA PHOTOBASE64?
+
     const [hasCameraPermission, setCameraPermission] = useState(null)
     const [photoName, setPhotoname] = useState(null) //tiedostoviittaus
-    const [photoBase64, setPhotoBase64] = useState(null) // kuvan siältö encoded
+    //const [photoBase64, setPhotoBase64] = useState(null) // kuvan siältö encoded
     const { observation } = route.params
     const Observation = observation
     //console.log("PROPSIT KAMERASSA", observation)
     const [photoTaken, setPhotoTaken] = useState(false)
+    //const [loading, setLoading] = useState(false)
 
     const camera = useRef(null)
     const [isCameraVisible, setCameraVisible] = useState(false)
 
-    useEffect(() => { askCameraPermission() }, [])
+    useEffect(() => {
+        askCameraPermission()
+        askCameraRollPermission()
+    }, [])
 
     const askCameraPermission = async () => {
         const { status } = await Camera.requestPermissionsAsync()
         setCameraPermission(status === 'granted')
+    }
+
+    const askCameraRollPermission = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+        if (status !== 'granted') {
+            Alert.alert('Sorry camera roll permission necessary!')
+        }
+
     }
 
     /*const takePicture = async () => {
@@ -40,11 +57,11 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
         if (camera) {
             const photo = await camera.current.takePictureAsync({ base64: true })
             const uri = await photo.uri
-            const base64 = await photo.base64
+            //const base64 = await photo.base64
             //console.log(uri)
             //console.log(base64)
             setPhotoname(await uri)
-            setPhotoBase64(await base64)
+            //setPhotoBase64(await base64)
             setPhotoTaken(true)
             setCameraVisible(false)
             {/*const Observation = {
@@ -72,29 +89,47 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
         )
     }*/
 
-    const openGallery = async () => {
+    const uploadImageFromGallery = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3], //kuvan editoimiseen?
+            quality: 1  //max quality, 0 = small size
+        })
+        //console.log("GALLERIAN RESULT", result)
 
-        ImagePicker.launchImageLibrary(options, (response) => {
-            console('Response = ', response);
-
-            if (response.didCancel) {
-                console.log('User cancelled image picker');
-            }
-            else {
-                setPhotoname({ fileURL: response.uri });
-                setPhotoTaken(true)
-            }
-        });
+        if (!result.cancelled) {
+            setPhotoname(result.uri)
+            setPhotoTaken(true)
+        }
     }
 
-    const uploadImage = async () => {
-        const picker = ImagePicker()
-        const pickedFile = await picker.getImage({ source: ImageSource.gallery })
-        setPhotoname(pickedFile)
+    const savePictureToDatabase = async () => {
+        // TODO save picture to db, save the path to params and send params to add name page
+        //console.log("SNAPISSA KUVAN OSOSITE", photoName)
+        //setLoading(true)
+        const filename = photoName.substring(photoName.lastIndexOf('/') + 1);
+        const picturesaving = await savePicture(photoName)
+        //setLoading(false)
+        console.log("DOWNLOAD URL", filename) // tää Observationiin?
+
+        const Observation = {
+            photoname: filename,
+            species: observation.species,
+            place: observation.place,
+            time: observation.time,
+            sex: observation.sex,
+            quantity: observation.quantity,
+            weather: observation.weather
+        }
+        //console.log("Observationin kuva", Observation.picture.photoNamephotoName)
+        //console.log("Observationin 64", Observation.picture.photoBase64)
+        navigation.navigate('AddName', { observation: Observation })
     }
 
-    const savePicture = () => {
-        console.log("SNAPISSA KUVAN OSOSITE", photoName)
+    const handlePictureCancel = () => {
+        setPhotoTaken(false)
+        setCameraVisible(false)
     }
 
     const renderCamera = () => {
@@ -112,12 +147,12 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
             <View style={{ alignItems: 'center' }}>
                 <View style={styles.buttonandicon}>
                     <Icon type="font-awesome-5" name="camera-retro" size={80} onPress={() => setCameraVisible(true)}></Icon>
-                    <Text style={{ color: '#C7BABA' }}>Ota kuva!</Text>
+                    <Text style={{ color: '#C7BABA' }}>Take picture!</Text>
                 </View>
 
                 <View style={styles.buttonandicon}>
-                    <Icon type="font-awesome-5" name="cloud-upload-alt" size={80} onPress={() => uploadImage()}></Icon>
-                    <Text style={{ color: '#C7BABA' }}>Lataa kuva!</Text>
+                    <Icon type="font-awesome-5" name="cloud-upload-alt" size={80} onPress={() => uploadImageFromGallery()}></Icon>
+                    <Text style={{ color: '#C7BABA' }}>Upload picture!</Text>
                 </View>
             </View>
         )
@@ -130,10 +165,9 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
                     <Text>Oletko tyytyväinen?</Text>
                 </View>
                 <Image style={{ height: 170, width: 200 }} source={{ uri: photoName }}></Image>
-                <Image style={{ height: 170, width: 200 }} source={{ uri: `data:image/gif;base64,${photoBase64}` }}></Image>
                 <View style={{ flexDirection: 'row' }}>
-                    <Button title="Take new" onPress={() => renderCamera()}></Button>
-                    <Button title="Confirm" onPress={() => savePicture()}></Button>
+                    <Button title="Take new" onPress={() => handlePictureCancel()}></Button>
+                    <Button title="Confirm" onPress={() => savePictureToDatabase()}></Button>
                     {/*<Button title="Confirm" onPress={() => navigation.navigate('AddName', { observation: Observation })}></Button>*/}
                 </View>
             </View>

@@ -21,7 +21,7 @@ export default function AddSexAndQuantity({ route, navigation }) {
 
     const navigateToAddWeather = () => {
         const Observation = {
-            picture: { photoName: observation.picture.photoName, photoBase64: observation.picture.photoBase64 },
+            photoname: observation.photoname,
             species: observation.species,
             place: observation.place,
             time: observation.time,
