@@ -1,14 +1,8 @@
-//import { firebase } from '@react-native-firebase/auth';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
 import { Button, Icon, ListItem, Avatar } from 'react-native-elements';
-
-//import * as firebase from 'firebase'
-//import firebase from firebase;
-//import {firebaseConfig} from '../firebase_config'
-//firebase.initializeApp(firebaseConfig)
-import { getObservations } from '../firebase_config'
+import { getObservations } from '../firebase'
 
 
 export default function AddedObservations() {
@@ -17,17 +11,26 @@ export default function AddedObservations() {
     useEffect(() => {
         const obs = getObservations()
         setData(obs)
-        //console.log("DATA USEEFFECTISSÄ",data)
     }, [])
 
-    const renderItem =(observation)=> {
+    const renderImageComponent = (address) => {
+        return (
+            <Image style={{ height: 200, width: 200 }} source={{ uri: `${address}` }}></Image>
+        )
+    }
+
+    const renderItem = (observation) => {
         // large xlarge
-        return(
+        return (
             <ListItem key={observation.id} bottomDivider>
-                <Avatar rounded size="large" source={require('../pictures/avatar2.png')}></Avatar>
+                {observation.photoname === "" ? (
+                    <Avatar rounded size="large" source={require('../pictures/avatar2.png')}></Avatar>
+                ): (<Avatar rounded size="large" ImageComponent={() => renderImageComponent(observation.photoname)}></Avatar>)}
+                
+                
                 <ListItem.Content>
-                <ListItem.Title>{observation.species}</ListItem.Title>
-                <ListItem.Subtitle>{observation.time}</ListItem.Subtitle>
+                    <ListItem.Title>{observation.species}</ListItem.Title>
+                    <ListItem.Subtitle>{observation.time}</ListItem.Subtitle>
                 </ListItem.Content>
                 <ListItem.Chevron></ListItem.Chevron>
             </ListItem>
@@ -38,11 +41,10 @@ export default function AddedObservations() {
     return (
         <View>
             <FlatList
-            data={data}
-            renderItem={({item}) => renderItem(item)}
-            keyExtractor={obs => obs.id}>
+                data={data}
+                renderItem={({ item }) => renderItem(item)}
+                keyExtractor={obs => obs.id}>
             </FlatList>
-           {/* <Button title="see" onPress={() => console.log("DATAN TULOSTUS",typeof(data))}></Button> */}
         </View>
     )
 }

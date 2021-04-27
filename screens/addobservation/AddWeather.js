@@ -1,14 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-//import { format } from 'node:path';
 import React, { useState, useEffect } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import { Button, CheckBox } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
-//import * as firebase from 'firebase'
-//import { firebaseConfig } from '../../firebase_config'
-
-//firebase.initializeApp(firebaseConfig)
-import {saveObservation} from '../../firebase_config'
+import { saveObservation } from '../../firebase'
 
 const initialCheckboxes = [
     { id: 1, title: 'aurinkoinen', isChecked: false },
@@ -56,17 +51,6 @@ export default function AddWeather({ route, navigation }) {
             weather: nameList
         }
         saveObservation(Observation)
-        /*firebase.database().ref('/observations').push(
-            {
-                'picture': { photoName: Observation.picture.photoName, photoBase64: Observation.picture.photoBase64 },
-                'species': Observation.species,
-                'place': Observation.place,
-                'time': Observation.time,
-                'sex': Observation.sex,
-                'quantity': Observation.quantity,
-                'weather': Observation.weather
-            }
-        )*/
         Alert.alert(`Tallensit ${observation.species} omiin havaintoihisi!`)
         navigation.navigate('home')
     }
