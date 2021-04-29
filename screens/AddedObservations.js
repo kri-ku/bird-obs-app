@@ -40,6 +40,7 @@ export default function AddedObservations() {
 
     return (
         <View>
+            <Text>moi täällä ollaan</Text>
             <FlatList
                 data={data}
                 renderItem={({ item }) => renderItem(item)}

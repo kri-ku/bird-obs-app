@@ -1,55 +1,69 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Alert } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 //import auth from '@react-native-firebase/auth'
 import { Input, Button } from 'react-native-elements'
-import { set } from 'react-native-reanimated';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { signUp, signIn, writeUserData } from '../firebase'
 
-export default function CreateAccount() {
+export default function CreateAccount({ navigation: { goBack } }) {
+  const [uname, setUname] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [passwordAgain, setPasswordAgain] = useState('')
 
-  const createAccount = () => {
-    console.log("HÄPPÄÄ")
+  const createAccount = async () => {
     console.log(email)
     console.log(password)
     console.log(passwordAgain)
 
-    if(password === passwordAgain) {
+    if (password === passwordAgain) {
       console.log("SAMAT")
+      try {
+        await signUp(email, password)
+        await signIn(email, password)
+        await writeUserData(email, uname)
+      } catch (err) {
+        console.log(err)
+      }
+
     } else {
       Alert.alert("Your passwords didn't match! Try again.")
       setPassword('')
       setPasswordAgain('')
     }
-    /*auth()
-      .createUserWithEmailAndPassword('jane.doe@example.com', 'SuperSecretPassword!')
-      .then(() => {
-        console.log('User account created & signed in!');
-      })
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
-        }
+    await signIn()
 
-        if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
-        }
 
-        console.error(error);
-      }); */
   }
   return (
-// make possibility to see password when writing
+    // make possibility to see password when writing
 
     <View style={styles.container}>
       <View style={styles.inputs}>
-        <Text>Create account:</Text>
+        <Text>Sign up:</Text>
+
+        <Input
+          placeholder='Username'
+          autoCapitalize='none'
+          leftIcon={
+            <Icon
+              name='user'
+              size={24}
+              color='black'
+            />
+          }
+          value={uname}
+          onChangeText={text => setUname(text)}
+          secureTextEntry={false}
+
+        />
+
         <Input
           placeholder='Email'
+          autoCapitalize='none'
           leftIcon={
             <Icon
               name='user'
@@ -60,31 +74,45 @@ export default function CreateAccount() {
           value={email}
           onChangeText={text => setEmail(text)}
           secureTextEntry={false}
+          keyboardType='email-address'
         />
-        <Input placeholder="Password" leftIcon={
-          <Icon
-            name='lock'
-            size={24}
-            color='black'
-          />}
+        <Input
+          placeholder="Password"
+          autoCapitalize='none'
+          leftIcon={
+            <Icon
+              name='lock'
+              size={24}
+              color='black'
+            />}
           value={password}
           onChangeText={text => setPassword(text)}
           secureTextEntry={true} />
 
-        <Input placeholder="Rewrite Password" leftIcon={
-          <Icon
-            name='lock'
-            size={24}
-            color='black'
-          />}
+        <Input
+          placeholder="Rewrite Password"
+          leftIcon={
+            <Icon
+              name='lock'
+              size={24}
+              color='black'
+            />}
           value={passwordAgain}
           onChangeText={text => setPasswordAgain(text)}
-          secureTextEntry={true} />
+          secureTextEntry={true}
+          keyboardType='email-address' />
       </View>
+
       <Button buttonStyle={styles.button}
         titleStyle={{ color: 'white' }} title="Create account"
         onPress={() => createAccount()}></Button>
+      <Text>placeholder</Text>
+      <TouchableOpacity onPress={() => goBack()}>
+        <Text>Sign in</Text>
+      </TouchableOpacity>
+
       <StatusBar style="auto" />
+
     </View>
 
   );

@@ -105,6 +105,7 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
                     <Icon type="font-awesome-5" name="cloud-upload-alt" size={80} onPress={() => uploadImageFromGallery()}></Icon>
                     <Text style={{ color: '#C7BABA' }}>Upload picture!</Text>
                 </View>
+                <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} title="Seuraava" onPress={() => navigation.navigate('AddName', { observation: Observation })}></Button>
             </View>
         )
     }
@@ -113,12 +114,12 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
         return (
             <View>
                 <View>
-                    <Text>Oletko tyytyväinen?</Text>
+                    <Text>Are you happy with this picture?</Text>
                 </View>
-                <Image style={{ height: 170, width: 200 }} source={{ uri: photoName }}></Image>
+                <Image resizeMode='contain' style={{ height:350, width: 350 }} source={{ uri: photoName }}></Image>
                 <View style={{ flexDirection: 'row' }}>
-                    <Button title="Take new" onPress={() => handlePictureCancel()}></Button>
-                    <Button title="Confirm" onPress={() => savePictureToDatabase()}></Button>
+                    <Button title="Take new" buttonStyle={styles.nextbutton} onPress={() => handlePictureCancel()}></Button>
+                    <Button title="Confirm" buttonStyle={styles.nextbutton} onPress={() => savePictureToDatabase()}></Button>
                 </View>
             </View>
         )
@@ -134,7 +135,7 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
             <View style={styles.container}>
                 <View style={{ width: '100%', marginLeft: 10, marginBottom: 20 }}>
                     <Text style={{ color: '#C7BABA' }}>Add bird 1/7</Text>
-                    <Text style={{ fontSize: 20 }}>Onko havainnostasi kuvaa?</Text>
+                    <Text style={{ fontSize: 18 }}>Do you have a picture of your observation?</Text>
                 </View>
                 {photoTaken ? renderPicture()
                     : (
@@ -143,7 +144,6 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
                         </View >
                     )
                 }
-                <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} title="Seuraava" onPress={() => navigation.navigate('AddName', { observation: Observation })}></Button>
             </View>
         )
     }
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
     },
     nextbutton: {
         width: 150,

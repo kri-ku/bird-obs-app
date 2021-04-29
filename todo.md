@@ -1,0 +1,4 @@
+- reload app.js
+- reload AddedObservations
+- try app with more users
+- 

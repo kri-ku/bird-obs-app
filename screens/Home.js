@@ -1,18 +1,25 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View, Image} from 'react-native';
-import {Divider, Header } from 'react-native-elements';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Image } from 'react-native';
+import { Divider, Header } from 'react-native-elements';
 import Logo from '../components/logo';
 import { Button } from 'react-native-elements';
 import Name from './addobservation/AddName';
+import { getUserData } from '../firebase'
 
-export default function Home({navigation}) {
+export default function Home({ navigation }) {
+  const [uname, setUname] = useState('')
+
+  useEffect(() => {
+    const udata = getUserData()
+    setUname(udata[0].username)
+  })
 
   const Observation = {
-    photoName:'',
-    species:'',
-    place:'',
-    time:'',
+    photoName: '',
+    species: '',
+    place: '',
+    time: '',
     sex: '',
     quantity: 0,
     weather: []
@@ -21,17 +28,17 @@ export default function Home({navigation}) {
 
   return (
     <View style={styles.container}>
-      <Header style={{height: 80}}
-      containerStyle={{backgroundColor: '#C7BABA', justifyContent:'center'}}
-      leftComponent={{text:'Hello JORMA!', style:{width:150, color:'white', marginTop: 30, marginLeft: 20, fontSize: 20}}}
-      rightComponent={<Image resizeMode='contain' style={{height:80, width:80}} source={require('../pictures/circle-cropped.png')}></Image>}></Header>
-      <Divider style={{backgroundColor: 'black', width: '90%', height: 1}}></Divider>
+      <Header style={{ height: 80 }}
+        containerStyle={{ backgroundColor: '#C7BABA', justifyContent: 'center' }}
+        leftComponent={{ text: `Hello ${uname}!`, style: { width: 150, color: 'white', marginTop: 30, marginLeft: 20, fontSize: 20 } }}
+        rightComponent={<Image resizeMode='contain' style={{ height: 80, width: 80 }} source={require('../pictures/circle-cropped.png')}></Image>}></Header>
+      <Divider style={{ backgroundColor: 'black', width: '90%', height: 1 }}></Divider>
 
-      <View style={{flex:1.5}}>
+      <View style={{ flex: 1.5 }}>
 
-      <Button buttonStyle={styles.button} titleStyle={{color:'white'}} title="Add observation" onPress={()=> navigation.navigate('AddPicture', {observation: Observation})}></Button>
-      <Button buttonStyle={styles.button} titleStyle={{color:'white'}} title="See observations" onPress={()=> navigation.navigate('Added Observations')}></Button>
-      <StatusBar style="auto" />
+        <Button buttonStyle={styles.button} titleStyle={{ color: 'white' }} title="Add observation" onPress={() => navigation.navigate('AddPicture', { observation: Observation })}></Button>
+        <Button buttonStyle={styles.button} titleStyle={{ color: 'white' }} title="See observations" onPress={() => navigation.navigate('Added Observations')}></Button>
+        <StatusBar style="auto" />
       </View>
     </View>
   );
@@ -44,18 +51,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
-  header:{
+  header: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     flex: 0.3,
-    marginTop:50
+    marginTop: 50
   },
-  button:{
+  button: {
     width: 300,
     margin: 10,
-    borderRadius:10,
-    backgroundColor:'#C7BABA',
-    
-}
+    borderRadius: 10,
+    backgroundColor: '#C7BABA',
+
+  }
 });
