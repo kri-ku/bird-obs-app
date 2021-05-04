@@ -5,13 +5,14 @@ import { Button, Icon, ListItem, Avatar } from 'react-native-elements';
 import { getObservations } from '../firebase'
 
 
-export default function AddedObservations() {
+export default function AddedObservations({navigation: {reset}, route}) {
     const [data, setData] = useState([])
 
+    
     useEffect(() => {
         const obs = getObservations()
         setData(obs)
-    }, [])
+    })
 
     const renderImageComponent = (address) => {
         return (

@@ -1,17 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 
 export default function AddName({ route, navigation }) {
     const { observation } = route.params
-    //const Observation = observation
-    console.log("PROPSIT ADDNAMESSA", observation)
-
     const [species, setSpecies] = useState('')
 
-    const moveToAddPlace =()=> {
-        console.log("MUUTTUNUT LAJI", species)
+    const moveToAddPlace = () => {
         const Observation = {
             photoname: observation.photoname,
             species: `${species}`,
@@ -26,19 +22,24 @@ export default function AddName({ route, navigation }) {
 
     return (
         <View style={styles.container}>
-            <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, flex: 0.2 }}>
-                <Text style={{ color: '#C7BABA' }}>Add bird 2/7</Text>
-                <Text style={{ fontSize: 20 }}>Lisää laji</Text>
+
+            <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, marginTop: 30 }}>
+                <Text style={{ color: '#C7BABA' }}>Add bird 2/6</Text>
+                <Text style={styles.headerAndButtonText}>Add species</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('home')}>
+                    <Text style={styles.cancelButton}>Back to Home</Text>
+                </TouchableOpacity>
             </View>
-            <View style={{ justifyContent: 'center', alignItems: 'center', width: '80%', marginTop: 50 }}>
+
+            <View style={{ alignItems: 'center', width: '80%', marginTop: 100 }}>
                 <Input
-                    label="Laji"
+                    label="Species"
                     name="species"
                     value={species}
                     onChangeText={text => setSpecies(text)}
                     returnKeyType="done"></Input>
             </View>
-            <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} title="Seuraava" onPress={moveToAddPlace}></Button>
+            <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white', letterSpacing: 2 }} title="Next" onPress={moveToAddPlace}></Button>
         </View>
     )
 }
@@ -57,7 +58,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#C7BABA',
 
     },
-    input: {
-
+    cancelButton: {
+        color: 'red',
+        letterSpacing: 1
+    },
+    text: {
+        letterSpacing: 2,
+        marginBottom: 6
+    },
+    headerAndButtonText: {
+        letterSpacing: 1.5,
+        fontSize: 15
     }
 });

@@ -1,12 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 export default function AddTime({ route, navigation }) {
     const { observation } = route.params
-    console.log("PROPSIT ADDTIMESSA", observation)
     const [datePickerVisibility, setDatePickerVisibility] = useState(false)
     const [dateToPrint, setDateToPrint] = useState('')
     const [date, setDate] = useState('')
@@ -14,20 +13,17 @@ export default function AddTime({ route, navigation }) {
     useEffect(() => { makePrintableDate() }, [date])
 
     const handleConfirm = (date) => {
-        //console.log('DATE', typeof (date), ' ', JSON.stringify(date))
         setDate(date)
         makePrintableDate()
         hideDatePicker()
-
     }
 
     const makePrintableDate = () => {
-        //console.log("DATEN PVM", date.getDate)
         if (date === '') {
             setDateToPrint('')
         } else {
-            //setDateToPrint(date.getHours()+ 'kissa')
-            setDateToPrint(`${date.getHours()}:${date.getMinutes()},  ${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`)        }
+            setDateToPrint(`time: ${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}, date: ${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`)
+        }
     }
 
     const hideDatePicker = () => {
@@ -50,11 +46,17 @@ export default function AddTime({ route, navigation }) {
         }
         navigation.navigate('AddSexAndQuantity', { observation: Observation })
     }
+    
     return (
         <View style={styles.container}>
-            <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, marginTop: 10 }}>
-                <Text style={{ color: '#C7BABA' }}>Add bird 4/7</Text>
-                <Text style={{ fontSize: 20 }}>Lisää aika</Text>
+
+            <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, marginTop: 30 }}>
+                <Text style={{ color: '#C7BABA' }}>Add bird 4/6</Text>
+                <Text style={styles.headerAndButtonText}>What was the time?</Text>
+
+                <TouchableOpacity onPress={() => navigation.navigate('home')}>
+                    <Text style={styles.cancelButton}>Back to Home</Text>
+                </TouchableOpacity>
             </View>
 
             <View style={styles.buttonandicon}>
@@ -65,8 +67,8 @@ export default function AddTime({ route, navigation }) {
                 isVisible={datePickerVisibility} mode='datetime'
                 onConfirm={handleConfirm} onCancel={hideDatePicker} date={new Date()}
                 locale="en_GB"></DateTimePickerModal>
-            <Text>{dateToPrint}</Text>
-            <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} title="Seuraava" onPress={navigateToAddSexAndQuantity}></Button>
+            <Text style={styles.text}>{dateToPrint}</Text>
+            <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} titleStyle={styles.headerAndButtonText} title="Next" onPress={navigateToAddSexAndQuantity}></Button>
         </View>
     )
 }
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
     },
     nextbutton: {
         width: 150,
@@ -92,6 +94,19 @@ const styles = StyleSheet.create({
         height: 180,
         alignItems: 'center',
         justifyContent: 'center',
-        margin: 10
+        margin: 10,
+        marginTop: 100
+    },
+    headerAndButtonText: {
+        letterSpacing: 1.5,
+        fontSize: 15
+    },
+    cancelButton: {
+        color: 'red',
+        letterSpacing: 1
+    },
+    text: {
+        letterSpacing: 1.5,
+        margin: 6
     }
 });

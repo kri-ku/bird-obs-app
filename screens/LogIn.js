@@ -1,8 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ImageBackground, Image, Alert } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Image, Alert, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import { Input, Button } from 'react-native-elements'
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { signIn, authentication } from '../firebase'
 
@@ -18,9 +17,17 @@ export default function Login({ navigation }) {
 
     const handleSignIn = () => {
         try {
-            signIn(email,password)
+            signIn(email, password)
             //authentication.signInWithEmailAndPassword(email, password)
             //console.log("MOI")
+            //const user = authentication.currentUser
+
+            /*authentication.onAuthStateChanged(function (user) {
+                if (user) {
+                    navigation.navigate('home')
+                    console.log("logged in",)
+                }
+            })*/
         } catch (err) {
             var errorCode = error.code;
             var errorMessage = error.message;
@@ -39,13 +46,16 @@ export default function Login({ navigation }) {
     }
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView style={styles.container}>
+
+            {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}>*/}
 
             {/*<ImageBackground source={require('../pictures/billy-huynh-sky.jpg')} style={styles.image}>*/}
+            <Image resizeMode='contain' style={{ height: 150, width: 150 }} source={require('../pictures/circle-cropped-small.png')}></Image>
+            <Text style={styles.headerText}>Catch the bird</Text>
             <View style={styles.inputs}>
-                <Text>Catch the bird</Text>
-                <Image resizeMode='contain' style={{ height: 150, width: 150 }} source={require('../pictures/circle-cropped.png')}></Image>
 
+                {/*<Image resizeMode='contain' style={{ height: 150, width: 150 }} source={require('../pictures/circle-cropped.png')}></Image>*/}
                 <Input
                     placeholder='Email'
                     value={email}
@@ -70,38 +80,45 @@ export default function Login({ navigation }) {
                             color='black'
                         />}
                     secureTextEntry={true} />
+
+
             </View>
+
+
+
+            <Button buttonStyle={styles.button} titleStyle={styles.buttonTitle} title="Sign in" onPress={() => handleSignIn()}></Button>
+
             <TouchableOpacity style={{ color: 'red' }}>
-                <Text style={styles.forgotbutton} style={{ textAlign: 'left' }}>Forgot your password?</Text>
+                <Text style={styles.forgotbutton}>Forgot your password?</Text>
             </TouchableOpacity>
-            <Button buttonStyle={styles.button} titleStyle={{ color: 'white' }} title="Sign in" onPress={() => handleSignIn()}></Button>
+
             <TouchableOpacity onPress={() => navigation.navigate('CreateAccount')}>
-                <Text style={styles.text} style={{ textAlign: 'left' }}>Don't have an account? Sign up</Text>
+                <Text style={styles.signUp}>Don't have an account? Sign up</Text>
             </TouchableOpacity>
-
-
-
             {/*</ImageBackground>*/}
-        </View>
+            {/*</TouchableWithoutFeedback>*/}
+
+        </KeyboardAvoidingView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column',
+        //flexDirection: 'column',
         //backgroundColor: '#fff',
         //alignItems: 'center',
         //justifyContent: 'center',
         resizeMode: "cover",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: 'center',
     },
     image: {
-        flex: 1,
+        //flex: 1,
         resizeMode: "cover",
         justifyContent: "center",
         alignItems: 'center',
+        opacity: 2
 
 
     },
@@ -112,20 +129,39 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 20,
         margin: 10,
-        padding: 10, flex: 0.9
+        padding: 10,
+        //flex: 0.9
 
     },
     button: {
         width: 300,
-        margin: 10,
+        //margin: 10,
         borderRadius: 10,
         backgroundColor: '#C7BABA',
+        margin: 5
+    },
+    buttonTitle: {
+        color: 'white',
+        letterSpacing: 2,
 
     },
     forgotbutton: {
-        height: 10,
-        marginBottom: 30,
+        height: 20,
+        //marginBottom: 30,
         color: 'blue',
+        letterSpacing: 2,
+        textAlign: 'left',
+        margin: 5
 
+    },
+    headerText: {
+        letterSpacing: 2,
+        fontSize: 20,
+        margin: 8
+    },
+    signUp: {
+        letterSpacing: 2,
+        textAlign: 'left',
+        margin: 5
     }
 });

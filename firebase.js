@@ -102,4 +102,5 @@ const signOut = async () => await authentication.signOut()
 const doPasswordReset = async (email) => await authentication.sendPasswordResetEmail(email)
 const doPasswordUpdate = async (password) => await authentication.currentUser.updatePassword(password)
 
-module.exports = { saveObservation, getObservations, savePicture, getImageDownloadUri, signUp, signIn, authentication, writeUserData, getUserData }
+module.exports = { saveObservation, getObservations, savePicture, getImageDownloadUri, signUp, signIn, authentication, writeUserData, getUserData,
+signOut }

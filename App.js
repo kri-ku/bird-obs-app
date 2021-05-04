@@ -1,12 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState, createContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './screens/Home';
-import Login from './screens/LogIn';
-import Map from './components/Mapview';
 //import CreateAccount from './screens/CreateAccount';
 
 import AddPicture from './screens/addobservation/AddPicture';
@@ -25,91 +23,73 @@ import { authentication } from './firebase'
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const user = authentication.currentUser
-authentication.onAuthStateChanged(function (user) {
-  if (user) {
-    console.log("logged in",)
-  } else {
-    console.log("no user!")
-  }
-})
+export const AuthContext = createContext(null)
 
-function HomeNavigator() {
-  //screenOptions={{ headerShown: false }}
-  return (
-    <Stack.Navigator >
-      {user ? (
-        <>
-          <Stack.Screen name="home" component={Home}></Stack.Screen>
-          <Stack.Screen name="AddPicture" component={AddPicture} ></Stack.Screen>
-          <Stack.Screen name="AddName" component={AddName} ></Stack.Screen>
-          <Stack.Screen name="AddPlace" component={AddPlace} ></Stack.Screen>
-          <Stack.Screen name="AddTime" component={AddTime} ></Stack.Screen>
-          <Stack.Screen name="AddSexAndQuantity" component={AddSexAndQuantity} ></Stack.Screen>
-          <Stack.Screen name="AddWeather" component={AddWeather} ></Stack.Screen>
-          <Stack.Screen name="Added Observations" component={AddedObservations}></Stack.Screen>
-        </>
-      ) : (
-        <>
-          <Stack.Screen name="signin" component={LogIn}></Stack.Screen>
-          <Stack.Screen name="CreateAccount" component={CreateAccount}></Stack.Screen>
-        </>
-      )}
 
-    </Stack.Navigator>
-  )
-}
+// https://heartbeat.fritz.ai/how-to-manage-authentication-flows-in-react-native-with-react-navigation-v5-and-firebase-860f57ae20d3
 
-/*function LogInNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="signin" component={LogIn}></Stack.Screen>
-      <Stack.Screen name="signup" component={CreateAccount}></Stack.Screen>
-      <Stack.Screen></Stack.Screen>
-    </Stack.Navigator>
-  )
-} */
-
-const BottomNavigator = () => {
-  
+const SignInStack = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="login" component={Login}></Tab.Screen>
-        <Tab.Screen name="home" component={HomeNavigator}></Tab.Screen>
-        <Tab.Screen name="map" component={Map}></Tab.Screen>
-        <Tab.Screen name="createAccount" component={CreateAccount}></Tab.Screen>
-
-      </Tab.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="home" component={Home}></Stack.Screen>
+        <Stack.Screen name="AddPicture" component={AddPicture} ></Stack.Screen>
+        <Stack.Screen name="AddName" component={AddName} ></Stack.Screen>
+        <Stack.Screen name="AddPlace" component={AddPlace} ></Stack.Screen>
+        <Stack.Screen name="AddTime" component={AddTime} ></Stack.Screen>
+        <Stack.Screen name="AddSexAndQuantity" component={AddSexAndQuantity} ></Stack.Screen>
+        <Stack.Screen name="AddWeather" component={AddWeather} ></Stack.Screen>
+        <Stack.Screen name="Added Observations" component={AddedObservations}></Stack.Screen>
+      </Stack.Navigator>
     </NavigationContainer>
   )
 
 }
-// https://reactnavigation.org/docs/hiding-tabbar-in-screens
+
+const SignOutStack = () => {
+  return (
+    <NavigationContainer screenOptions={{ headerShown: false }}>
+      <Stack.Navigator>
+        <Stack.Screen name="signin" component={LogIn}></Stack.Screen>
+        <Stack.Screen name="CreateAccount" component={CreateAccount}></Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
+}
+
 
 export default function App() {
-  const [user,SetUser] = useState('')
-  //const [state, setState] = useState(false)
-  //const[refresh, setRefresh] = useState(1)
+  const [initializing, setInitializing] = useState(true)
+  const [user, setUser] = useState(null)
 
-  /*useEffect(()=> {
-    BottomNavigator.forceUpdate()
-  }, [user])*/
-  //useEffect(()=> {authentication.onAuthStateChanged((user)=> {SetUser(user)})})
+  // Handle user state changes
+  const onAuthStateChanged = (result) => {
+    console.log(result)
+    setUser(result)
+    if (initializing) setInitializing(false)
+  }
 
-  return (
-    <BottomNavigator></BottomNavigator>
-    /*
-    <NavigationContainer onAuthStateChanged={()=> setRefresh(0)}>
-      <Tab.Navigator>
-        <Tab.Screen name="login" component={Login}></Tab.Screen>
-        <Tab.Screen name="home" component={HomeNavigator}></Tab.Screen>
-        <Tab.Screen name="map" component={Map}></Tab.Screen>
-        <Tab.Screen name="createAccount" component={CreateAccount}></Tab.Screen>
-      </Tab.Navigator>
-    </NavigationContainer>*/
-  );
+  useEffect(() => {
+    const authSubscriber = authentication.onAuthStateChanged(onAuthStateChanged)
+
+    // unsubscribe on unmount
+    return authSubscriber
+  }, [])
+
+  if (initializing) {
+    return null
+  }
+
+  return user ? (
+    <AuthContext.Provider value={user}>
+      <SignInStack></SignInStack>
+    </AuthContext.Provider>
+  ) : (
+    <SignOutStack></SignOutStack>
+  )
+
 }
+
 
 const styles = StyleSheet.create({
   container: {

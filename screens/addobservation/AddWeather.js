@@ -1,27 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button, CheckBox } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import { saveObservation } from '../../firebase'
 
 const initialCheckboxes = [
-    { id: 1, title: 'aurinkoinen', isChecked: false },
-    { id: 2, title: 'pilvinen', isChecked: false },
-    { id: 3, title: 'lämmin', isChecked: false },
-    { id: 4, title: 'kuuma', isChecked: false },
-    { id: 5, title: 'leuto', isChecked: false },
-    { id: 6, title: 'sateinen', isChecked: false },
-    { id: 7, title: 'rankkasadetta', isChecked: false },
-    { id: 8, title: 'kylmä', isChecked: false },
-    { id: 9, title: 'loskaa', isChecked: false },
-    { id: 10, title: 'lunta', isChecked: false },
-    { id: 11, title: 'sumua', isChecked: false }
+    { id: 1, title: 'sunny', isChecked: false },
+    { id: 2, title: 'cloudy', isChecked: false },
+    { id: 3, title: 'warm', isChecked: false },
+    { id: 4, title: 'hot', isChecked: false },
+    { id: 5, title: 'gentle', isChecked: false },
+    { id: 6, title: 'rainy', isChecked: false },
+    { id: 7, title: 'rainstorm', isChecked: false },
+    { id: 8, title: 'cold', isChecked: false },
+    { id: 9, title: 'slush', isChecked: false },
+    { id: 10, title: 'snowy', isChecked: false },
+    { id: 11, title: 'foggy', isChecked: false }
 ]
 
 export default function AddWeather({ route, navigation }) {
     const { observation } = route.params
-    console.log("PARAMSIT ADDWEATHERISSA", observation)
     const [checkboxes, setCheckBoxes] = useState(initialCheckboxes)
 
     const handleChecked = (boxId) => {
@@ -39,7 +38,7 @@ export default function AddWeather({ route, navigation }) {
 
     const saveBirdToDb = () => {
         const weatherList = checkboxes.filter(box => box.isChecked === true)
-        const nameList = weatherList.map(box => box.title) //TOIMI combine?
+        const nameList = weatherList.map(box => box.title) //works, combine?
 
         const Observation = {
             photoname: observation.photoname,
@@ -51,14 +50,20 @@ export default function AddWeather({ route, navigation }) {
             weather: nameList
         }
         saveObservation(Observation)
-        Alert.alert(`Tallensit ${observation.species} omiin havaintoihisi!`)
+        Alert.alert(`You added ${observation.species} to your observations!`)
         navigation.navigate('home')
     }
     return (
         <ScrollView>
+            <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, marginTop: 30 }}>
+                <Text style={{ color: '#C7BABA' }}>Add bird 6/6</Text>
+                <Text style={styles.headerAndButtonText}>What was the weather like?</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('home')}>
+                    <Text style={styles.cancelButton}>Back to Home</Text>
+                </TouchableOpacity>
+            </View>
+
             <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, marginTop: 10 }}>
-                <Text style={{ color: '#C7BABA' }}>Add bird 5/7</Text>
-                <Text style={{ fontSize: 20 }}>Milllainen sää oli?</Text>
                 {checkboxes.map((box, index) => {
                     return (
                         <CheckBox
@@ -89,5 +94,18 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 10,
         backgroundColor: '#C7BABA'
+    },
+    map: {
+        flex: 1,
+        height: 400,
+        width: '100%'
+    },
+    headerAndButtonText: {
+        letterSpacing: 1.5,
+        fontSize: 15
+    },
+    cancelButton: {
+        color: 'red',
+        letterSpacing: 1
     },
 });

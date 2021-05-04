@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { Alert } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 //import auth from '@react-native-firebase/auth'
 import { Input, Button } from 'react-native-elements'
@@ -15,12 +16,12 @@ export default function CreateAccount({ navigation: { goBack } }) {
   const [passwordAgain, setPasswordAgain] = useState('')
 
   const createAccount = async () => {
-    console.log(email)
-    console.log(password)
-    console.log(passwordAgain)
+    //console.log(email)
+    //console.log(password)
+    //console.log(passwordAgain)
 
     if (password === passwordAgain) {
-      console.log("SAMAT")
+      //console.log("SAMAT")
       try {
         await signUp(email, password)
         await signIn(email, password)
@@ -35,80 +36,80 @@ export default function CreateAccount({ navigation: { goBack } }) {
       setPasswordAgain('')
     }
     await signIn()
-
-
   }
   return (
     // make possibility to see password when writing
 
     <View style={styles.container}>
+      
       <View style={styles.inputs}>
-        <Text>Sign up:</Text>
+      <Text style={styles.headerText}>Sign up:</Text>
+          <Input
+            placeholder='Username'
+            autoCapitalize='none'
+            leftIcon={
+              <Icon
+                name='user'
+                size={24}
+                color='black'
+              />
+            }
+            value={uname}
+            onChangeText={text => setUname(text)}
+            secureTextEntry={false}
 
-        <Input
-          placeholder='Username'
-          autoCapitalize='none'
-          leftIcon={
-            <Icon
-              name='user'
-              size={24}
-              color='black'
-            />
-          }
-          value={uname}
-          onChangeText={text => setUname(text)}
-          secureTextEntry={false}
+          />
 
-        />
+          <Input
+            placeholder='Email'
+            autoCapitalize='none'
+            leftIcon={
+              <Icon
+                name='user'
+                size={24}
+                color='black'
+              />
+            }
+            value={email}
+            onChangeText={text => setEmail(text)}
+            secureTextEntry={false}
+            keyboardType='email-address'
+          />
+          <Input
+            placeholder="Password"
+            autoCapitalize='none'
+            leftIcon={
+              <Icon
+                name='lock'
+                size={24}
+                color='black'
+              />}
+            value={password}
+            onChangeText={text => setPassword(text)}
+            secureTextEntry={true} />
 
-        <Input
-          placeholder='Email'
-          autoCapitalize='none'
-          leftIcon={
-            <Icon
-              name='user'
-              size={24}
-              color='black'
-            />
-          }
-          value={email}
-          onChangeText={text => setEmail(text)}
-          secureTextEntry={false}
-          keyboardType='email-address'
-        />
-        <Input
-          placeholder="Password"
-          autoCapitalize='none'
-          leftIcon={
-            <Icon
-              name='lock'
-              size={24}
-              color='black'
-            />}
-          value={password}
-          onChangeText={text => setPassword(text)}
-          secureTextEntry={true} />
-
-        <Input
-          placeholder="Rewrite Password"
-          leftIcon={
-            <Icon
-              name='lock'
-              size={24}
-              color='black'
-            />}
-          value={passwordAgain}
-          onChangeText={text => setPasswordAgain(text)}
-          secureTextEntry={true}
-          keyboardType='email-address' />
+          <Input
+            placeholder="Rewrite Password"
+            leftIcon={
+              <Icon
+                name='lock'
+                size={24}
+                color='black'
+              />}
+            value={passwordAgain}
+            onChangeText={text => setPasswordAgain(text)}
+            secureTextEntry={true}
+            keyboardType='email-address' />
+      
       </View>
 
+
       <Button buttonStyle={styles.button}
-        titleStyle={{ color: 'white' }} title="Create account"
+        titleStyle={styles.buttonTitle} title="Create account"
         onPress={() => createAccount()}></Button>
-      <Text>placeholder</Text>
+
       <TouchableOpacity onPress={() => goBack()}>
-        <Text>Sign in</Text>
+        <Text style={styles.signIn}>Sign in</Text>
       </TouchableOpacity>
 
       <StatusBar style="auto" />
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
 
   image: {
@@ -133,13 +134,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   inputs: {
-    justifyContent: 'center',
+    //justifyContent: 'flex-start',
+    //alignItems: 'flex-start',
     backgroundColor: 'white',
-    width: '80%',
+    width: '90%',
     alignItems: 'center',
     borderRadius: 20,
     margin: 10,
-    padding: 20
+    padding: 20,
+    alignItems: 'flex-start',
 
   },
   button: {
@@ -147,6 +150,26 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 10,
     backgroundColor: '#C7BABA',
+    margin: 5
 
-  }
+  },
+  buttonTitle: {
+    color: 'white',
+    letterSpacing: 2,
+
+  },
+
+  signIn: {
+    letterSpacing: 2,
+    textAlign: 'left',
+    margin: 6
+  },
+  headerText: {
+    letterSpacing: 2,
+    fontSize: 20,
+    marginBottom: 40
+    //margin: 8,
+    //marginLeft: 50,
+    //marginTop: 50
+},
 });

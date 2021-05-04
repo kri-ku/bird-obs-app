@@ -1,18 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useRef, useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, Alert, TouchableOpacity } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker'
 import { savePicture, getImageDownloadUri } from '../../firebase'
 
-export default function AddPicture({ route, navigation, navigation: { setParams } }) {
+export default function AddPicture({ route, navigation }) {
 
     const [hasCameraPermission, setCameraPermission] = useState(null)
     const [photoName, setPhotoname] = useState(null)
     const { observation } = route.params
     const Observation = observation
-    //console.log("PROPSIT KAMERASSA", observation)
     const [photoTaken, setPhotoTaken] = useState(false)
 
     const camera = useRef(null)
@@ -33,9 +32,7 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
         if (status !== 'granted') {
             Alert.alert('Sorry camera roll permission necessary!')
         }
-
     }
-
 
     const snap = async () => {
         if (camera) {
@@ -51,7 +48,7 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            aspect: [4, 3], //kuvan editoimiseen?
+            aspect: [4, 3], //editing photo
             quality: 1  //max quality, 0 = small size
         })
 
@@ -96,36 +93,36 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
     const renderFrontPage = () => {
         return (
             <View style={{ alignItems: 'center' }}>
-                <View style={styles.buttonandicon}>
-                    <Icon type="font-awesome-5" name="camera-retro" size={80} onPress={() => setCameraVisible(true)}></Icon>
-                    <Text style={{ color: '#C7BABA' }}>Take picture!</Text>
-                </View>
+                <View style={{ marginBottom: 50 }}>
+                    <View style={styles.buttonandicon}>
+                        <Icon type="font-awesome-5" name="camera-retro" size={80} onPress={() => setCameraVisible(true)}></Icon>
+                        <Text style={{ color: '#C7BABA' }}>Take picture!</Text>
+                    </View>
 
-                <View style={styles.buttonandicon}>
-                    <Icon type="font-awesome-5" name="cloud-upload-alt" size={80} onPress={() => uploadImageFromGallery()}></Icon>
-                    <Text style={{ color: '#C7BABA' }}>Upload picture!</Text>
+                    <View style={styles.buttonandicon}>
+                        <Icon type="font-awesome-5" name="cloud-upload-alt" size={80} onPress={() => uploadImageFromGallery()}></Icon>
+                        <Text style={{ color: '#C7BABA' }}>Upload picture!</Text>
+                    </View>
                 </View>
-                <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} title="Seuraava" onPress={() => navigation.navigate('AddName', { observation: Observation })}></Button>
+                <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} title="No photo" onPress={() => navigation.navigate('AddName', { observation: Observation })}></Button>
             </View>
         )
     }
 
     const renderPicture = () => {
         return (
-            <View>
+            <View style={{ alignItems: 'center' }}>
                 <View>
-                    <Text>Are you happy with this picture?</Text>
+                    <Text style={styles.text}>Are you happy with this picture?</Text>
                 </View>
-                <Image resizeMode='contain' style={{ height:350, width: 350 }} source={{ uri: photoName }}></Image>
+                <Image resizeMode='contain' style={{ height: 450, width: 450 }} source={{ uri: photoName }}></Image>
                 <View style={{ flexDirection: 'row' }}>
-                    <Button title="Take new" buttonStyle={styles.nextbutton} onPress={() => handlePictureCancel()}></Button>
-                    <Button title="Confirm" buttonStyle={styles.nextbutton} onPress={() => savePictureToDatabase()}></Button>
+                    <Button title="Take new" buttonStyle={styles.nextbutton} titleStyle={styles.headerAndButtonText} onPress={() => handlePictureCancel()}></Button>
+                    <Button title="Confirm" buttonStyle={styles.nextbutton} titleStyle={styles.headerAndButtonText} onPress={() => savePictureToDatabase()}></Button>
                 </View>
             </View>
         )
-
     }
-
 
     if (isCameraVisible) {
         return (renderCamera())
@@ -133,10 +130,15 @@ export default function AddPicture({ route, navigation, navigation: { setParams 
     } else {
         return (
             <View style={styles.container}>
-                <View style={{ width: '100%', marginLeft: 10, marginBottom: 20 }}>
-                    <Text style={{ color: '#C7BABA' }}>Add bird 1/7</Text>
-                    <Text style={{ fontSize: 18 }}>Do you have a picture of your observation?</Text>
+
+                <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, marginTop: 30 }}>
+                    <Text style={{ color: '#C7BABA' }}>Add bird 1/6</Text>
+                    <Text style={styles.headerAndButtonText}>Do you have a picture of your observation?</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('home')}>
+                        <Text style={styles.cancelButton}>Back to Home</Text>
+                    </TouchableOpacity>
                 </View>
+
                 {photoTaken ? renderPicture()
                     : (
                         <View>
@@ -155,7 +157,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
     },
     nextbutton: {
         width: 150,
@@ -178,5 +180,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         margin: 10
-    }
+    },
+    cancelButton: {
+        color: 'red',
+        letterSpacing: 1
+    },
+    text: {
+        letterSpacing: 2,
+        marginBottom: 6
+    },
+
 });

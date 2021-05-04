@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button, ButtonGroup } from 'react-native-elements';
 import NumericInput from 'react-native-numeric-input';
 
@@ -8,15 +8,12 @@ export default function AddSexAndQuantity({ route, navigation }) {
     const { observation } = route.params
     const [sex, setSex] = useState('')
     const [quantity, setQuantity] = useState(0)
-    const buttons = ['uros', 'naaras', 'lauma']
+    const buttons = ['male', 'female', 'both']
     const [selectedIndex, setSelectedIndex] = useState(2)
 
-    //console.log("PROPSIT ADDSEXISSA", observation)
     const updateIndex = (index) => {
         setSelectedIndex(index)
         setSex(buttons[index])
-        //console.log("INDEKSIII", index)
-        //console.log("SELECTED SEX", sex)
     }
 
     const navigateToAddWeather = () => {
@@ -34,13 +31,18 @@ export default function AddSexAndQuantity({ route, navigation }) {
 
     return (
         <View style={styles.container}>
-            <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, marginTop: 10 }}>
-                <Text style={{ color: '#C7BABA' }}>Add bird 5/7</Text>
-                <Text style={{ fontSize: 20 }}>Lisää aika</Text>
+
+            <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, marginTop: 30 }}>
+                <Text style={{ color: '#C7BABA' }}>Add bird 5/6</Text>
+                <Text style={styles.headerAndButtonText}>Add sex and quantity</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('home')}>
+                    <Text style={styles.cancelButton}>Back to Home</Text>
+                </TouchableOpacity>
             </View>
+
+
             <View style={styles.center}>
                 <View style={{ width: 300 }}>
-                    <Text>What?</Text>
                     <ButtonGroup
                         buttons={buttons}
                         selectedIndex={Number(selectedIndex)}
@@ -52,10 +54,10 @@ export default function AddSexAndQuantity({ route, navigation }) {
                         containerStyle={{ height: 70, width: 300 }}>
                     </ButtonGroup>
                 </View>
+
                 <View style={{ width: 300, marginTop: 50 }}>
-                    <Text>Montako?</Text>
                     <NumericInput
-                        onChange={value => setQuantity(value) || console.log("MÄÄRÄ", quantity)}
+                        onChange={value => setQuantity(value)}
                         totalHeight={70} totalWidth={300}
                         iconSize={12}
                         rounded
@@ -64,7 +66,8 @@ export default function AddSexAndQuantity({ route, navigation }) {
                         leftButtonBackgroundColor='#C7BABA'></NumericInput>
                 </View>
             </View>
-            <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} title="Seuraava" onPress={navigateToAddWeather}></Button>
+            <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} titleStyle={styles.headerAndButtonText} title="Next" onPress={navigateToAddWeather}></Button>
+
         </View>
     )
 }
@@ -74,12 +77,14 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
     },
     center: {
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'flex-start',
+        marginTop: 100,
+        marginBottom: 20
     },
     nextbutton: {
         width: 150,
@@ -92,5 +97,17 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 10,
         backgroundColor: 'black'
+    },
+    headerAndButtonText: {
+        letterSpacing: 1.5,
+        fontSize: 15
+    },
+    cancelButton: {
+        color: 'red',
+        letterSpacing: 1
+    },
+    text: {
+        letterSpacing: 1.5,
+        margin: 6
     }
 });

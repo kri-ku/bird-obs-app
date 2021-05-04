@@ -1,4 +1,5 @@
 - reload app.js
 - reload AddedObservations
 - try app with more users
-- 
+- fix map to load faster?
+- keyboardavoiding view to login?
