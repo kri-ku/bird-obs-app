@@ -5,8 +5,6 @@ import { removeItem } from '../firebase'
 
 export default function OneObservation({ route, navigation: { goBack } }) {
     const { observation } = route.params
-    //console.log("OBSERVATION YKSI", observation)
-    //console.log(typeof (photoname))
 
     const splitdate = (date) => {
         return date.substr(0, 25)
@@ -20,7 +18,7 @@ export default function OneObservation({ route, navigation: { goBack } }) {
         }
     }
 
-    const removeItemAndGoBack=()=> {
+    const removeItemAndGoBack = () => {
         removeItem(observation.timestamp)
         console.log(observation.timestamp)
         goBack()
@@ -36,14 +34,14 @@ export default function OneObservation({ route, navigation: { goBack } }) {
                 </TouchableOpacity>
             </View>
             <ScrollView contentContainerStyle={styles.ScrollView}>
-                {observation.photoname !== "" ? (<Image resizeMode='contain' style={styles.image} source={{ uri: observation.photoname }}></Image>) : (<Image resizeMode='contain' style={styles.image} source={require('../pictures/avatar2.png')}></Image>)}
+                {observation.photoname !== "" ? (<Image transition={false} resizeMode='contain' style={styles.image} source={{ uri: observation.photoname }}></Image>) : (<Image transition={false} resizeMode='contain' style={styles.image} source={require('../pictures/avatar3.png')}></Image>)}
                 <Text style={styles.text}>{splitdate(observation.time)}</Text>
                 <Text style={styles.text}>{observation.place}</Text>
                 <Text style={styles.text}>{observation.quantity}, {observation.sex}</Text>
                 <Text style={styles.text}>Weather was:</Text>
                 {returnweather(observation.weather)}
-                
-                <TouchableOpacity onPress={()=> removeItemAndGoBack()} style={{marginTop: 30}}>
+
+                <TouchableOpacity onPress={() => removeItemAndGoBack()} style={{ marginTop: 30 }}>
                     <Text style={styles.cancelButton}>remove</Text>
                 </TouchableOpacity>
             </ScrollView>
@@ -82,29 +80,8 @@ const styles = StyleSheet.create({
         margin: 5
 
     },
-
-
-
-
-    header: {
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        justifyContent: 'flex-start',
-        flex: 0.3,
-        marginTop: 50
-    },
-    button: {
-        width: 300,
-        height: 200,
-        margin: 10,
-        borderRadius: 10,
-        backgroundColor: '#C7BABA',
-    },
     text: {
         letterSpacing: 2
     },
-    buttonText: {
-        letterSpacing: 1.1,
-        color: 'white'
-    }
+
 });

@@ -45,7 +45,7 @@ export default function Home({ navigation }) {
   }
 
   return (
-    <ImageBackground source={require('../pictures/anthony-delanoix-btQt9i0Krag-unsplash.jpg')} style={styles.background}>
+    <ImageBackground source={require('../pictures/new_back.jpg')} style={styles.background}>
 
       <Header placement="left" style={styles.header}
         containerStyle={{ backgroundColor: '#C7BABA', height: 120 }}

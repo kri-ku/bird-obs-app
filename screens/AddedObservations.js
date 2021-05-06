@@ -39,7 +39,7 @@ export default function AddedObservations({ navigation, route }) {
             <ListItem key={observation.id} containerStyle={{ backgroundColor: '#D7ECEF' }} onPress={() => navigateToOneObservation(index)} bottomDivider>
 
                 {observation.photoname === "" ?
-                    (<Avatar rounded size="large" source={require('../pictures/avatar2.png')}></Avatar>) :
+                    (<Avatar rounded size="large" source={require('../pictures/avatar3.png')}></Avatar>) :
                     (<Avatar rounded size="large" ImageComponent={() => renderImageComponent(observation.photoname)}></Avatar>)}
 
                 <ListItem.Content>
