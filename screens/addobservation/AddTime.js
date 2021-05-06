@@ -1,8 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Button, Icon } from 'react-native-elements';
+import { StyleSheet, Text, View } from 'react-native';
+import { Icon } from 'react-native-elements';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import NextButton from '../../components/NextButton';
+import AddingHeader from '../../components/AddingHeader';
 
 export default function AddTime({ route, navigation }) {
     const { observation } = route.params
@@ -46,18 +48,11 @@ export default function AddTime({ route, navigation }) {
         }
         navigation.navigate('AddSexAndQuantity', { observation: Observation })
     }
-    
+
     return (
         <View style={styles.container}>
 
-            <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, marginTop: 30 }}>
-                <Text style={{ color: '#C7BABA' }}>Add bird 4/6</Text>
-                <Text style={styles.headerAndButtonText}>What was the time?</Text>
-
-                <TouchableOpacity onPress={() => navigation.navigate('home')}>
-                    <Text style={styles.cancelButton}>Back to Home</Text>
-                </TouchableOpacity>
-            </View>
+            <AddingHeader pagenumber={"4"} header={"What was the time?"}></AddingHeader>
 
             <View style={styles.buttonandicon}>
                 <Icon type="font-awesome-5" name="calendar-alt" size={80} onPress={showDatePicker}></Icon>
@@ -68,7 +63,7 @@ export default function AddTime({ route, navigation }) {
                 onConfirm={handleConfirm} onCancel={hideDatePicker} date={new Date()}
                 locale="en_GB"></DateTimePickerModal>
             <Text style={styles.text}>{dateToPrint}</Text>
-            <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} titleStyle={styles.headerAndButtonText} title="Next" onPress={navigateToAddSexAndQuantity}></Button>
+            <NextButton title="Next" onPress={navigateToAddSexAndQuantity}></NextButton>
         </View>
     )
 }
@@ -76,15 +71,9 @@ export default function AddTime({ route, navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#D7ECEF',
         alignItems: 'center',
         justifyContent: 'flex-start',
-    },
-    nextbutton: {
-        width: 150,
-        margin: 10,
-        borderRadius: 10,
-        backgroundColor: '#C7BABA'
     },
     buttonandicon: {
         borderColor: '#C7BABA',
@@ -95,18 +84,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         margin: 10,
-        marginTop: 100
-    },
-    headerAndButtonText: {
-        letterSpacing: 1.5,
-        fontSize: 15
-    },
-    cancelButton: {
-        color: 'red',
-        letterSpacing: 1
+        marginTop: 100,
+        backgroundColor: 'white'
     },
     text: {
         letterSpacing: 1.5,
         margin: 6
-    }
+    },
 });

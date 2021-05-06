@@ -1,9 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Button, CheckBox } from 'react-native-elements';
+import { Alert, StyleSheet, View } from 'react-native';
+import { CheckBox } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
-import { saveObservation } from '../../firebase'
+import { saveObservation } from '../../firebase';
+import NextButton from '../../components/NextButton';
+import AddingHeader from '../../components/AddingHeader';
 
 const initialCheckboxes = [
     { id: 1, title: 'sunny', isChecked: false },
@@ -37,9 +39,7 @@ export default function AddWeather({ route, navigation }) {
     }
 
     const saveBirdToDb = () => {
-        const weatherList = checkboxes.filter(box => box.isChecked === true)
-        const nameList = weatherList.map(box => box.title) //works, combine?
-
+        const nameList = checkboxes.filter(box => box.isChecked === true).map(box => box.title)
         const Observation = {
             photoname: observation.photoname,
             species: observation.species,
@@ -54,16 +54,9 @@ export default function AddWeather({ route, navigation }) {
         navigation.navigate('home')
     }
     return (
-        <ScrollView>
-            <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, marginTop: 30 }}>
-                <Text style={{ color: '#C7BABA' }}>Add bird 6/6</Text>
-                <Text style={styles.headerAndButtonText}>What was the weather like?</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('home')}>
-                    <Text style={styles.cancelButton}>Back to Home</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, marginTop: 10 }}>
+        <ScrollView style={{ backgroundColor: '#D7ECEF' }}>
+            <AddingHeader pagenumber={"6"} header={"What was the weather like?"}></AddingHeader>
+            <View style={{ width: '100%', backgroundColor: '#D7ECEF' }}>
                 {checkboxes.map((box, index) => {
                     return (
                         <CheckBox
@@ -76,8 +69,9 @@ export default function AddWeather({ route, navigation }) {
                         </CheckBox>
                     )
                 })}
+
             </View>
-            <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} title="Tallenna" onPress={() => saveBirdToDb()}></Button>
+            <NextButton title="Next" onPress={() => saveBirdToDb()}></NextButton>
         </ScrollView>
     )
 }
@@ -85,27 +79,8 @@ export default function AddWeather({ route, navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#D7ECEF',
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    nextbutton: {
-        width: 150,
-        margin: 10,
-        borderRadius: 10,
-        backgroundColor: '#C7BABA'
-    },
-    map: {
-        flex: 1,
-        height: 400,
-        width: '100%'
-    },
-    headerAndButtonText: {
-        letterSpacing: 1.5,
-        fontSize: 15
-    },
-    cancelButton: {
-        color: 'red',
-        letterSpacing: 1
-    },
+    }
 });

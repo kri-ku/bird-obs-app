@@ -36,7 +36,8 @@ const saveObservation = async (Observation) => {
       'sex': Observation.sex || "",
       'quantity': Observation.quantity || "",
       'weather': Observation.weather || "",
-      "user": authentication.currentUser.uid
+      "user": authentication.currentUser.uid,
+      "timestamp": Date.now()
     }
   )
 }
@@ -56,23 +57,76 @@ const writeUserData = async (email, name) => {
   })
 }
 
-const getObservations = () => {
+const getObservations = async () => {
   let obs = ''
-  database.child(`observations/${authentication.currentUser.uid}`).on('value', snapshot => {
-    const data = snapshot.val()
+  let ref = database.child(`observations/${authentication.currentUser.uid}`)
+  await ref.once('value', async (snapshot) => {
+    const data = await snapshot.val()
     obs = Object.values(data)
   })
   return obs
+
+
+
+  /*database.child(`observations/${authentication.currentUser.uid}`).on('value', snapshot => {
+    const data = snapshot.val()
+    obs = Object.values(data)
+    //console.log("DATA FIREBASESSA", obs)
+  })
+  return obs*/
 }
 
-const getUserData = () => {
+const getUserData = async () => {
   let userdata = ''
-  database.child(`users/${authentication.currentUser.uid}`).on('value', snapshot => {
+  let ref = database.child(`users/${authentication.currentUser.uid}`)
+  await ref.once('value', async (snapshot) => {
+    const data = await snapshot.val()
+    userdata = Object.values(data)
+  })
+  console.log("USERDATA FIREBASESA", userdata)
+  return userdata
+  /*database.child(`users/${authentication.currentUser.uid}`).on('value', snapshot => {
     const data = snapshot.val()
     userdata = Object.values(data)
   })
-  return userdata
+  return userdata*/
+
+
 }
+
+/*const getObservationById = (id) => {
+  let obs = ''
+  database.child(`observations/${authentication.currentUser.uid}/${id}`).on('value', snapshot => {
+    const data = snapshot.val()
+    obs = Object.values(data)
+  })
+  //console.log("DATA FIREBASESSA YKS", obs)
+  return obs
+}
+*/
+
+const removeItem = (time) => {
+  //.child("place").child(placeId).removeValue();
+  let value = database.child(`observations/${authentication.currentUser.uid}`).child(`timestamp/${time}`)
+  console.log("VALUE FIREBASESA", value)
+  value.removeValue()
+
+  /*applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+      @Override
+      public void onDataChange(DataSnapshot dataSnapshot) {
+          for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
+              appleSnapshot.getRef().removeValue();
+          }
+      }
+  
+      @Override
+      public void onCancelled(DatabaseError databaseError) {
+          Log.e(TAG, "onCancelled", databaseError.toException());
+      }
+  });*/
+}
+
+
 
 const getImageDownloadUri = async (imageName) => {
   var ref = storage.child(`images/${authentication.currentUser.uid}/${imageName}`)
@@ -97,10 +151,13 @@ const signIn = async (email, password) => {
   }
 }
 
-// not used anywhere atm
 const signOut = async () => await authentication.signOut()
+// not used anywhere atm
 const doPasswordReset = async (email) => await authentication.sendPasswordResetEmail(email)
 const doPasswordUpdate = async (password) => await authentication.currentUser.updatePassword(password)
 
-module.exports = { saveObservation, getObservations, savePicture, getImageDownloadUri, signUp, signIn, authentication, writeUserData, getUserData,
-signOut }
+module.exports = {
+  database,
+  saveObservation, getObservations, savePicture, getImageDownloadUri, signUp, signIn, authentication, writeUserData, getUserData,
+  signOut, removeItem
+}

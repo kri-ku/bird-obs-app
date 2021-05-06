@@ -14,6 +14,7 @@ import AddTime from './screens/addobservation/AddTime';
 import AddSexAndQuantity from './screens/addobservation/AddSexAndQuantity';
 import AddWeather from './screens/addobservation/AddWeather';
 import AddedObservations from './screens/AddedObservations';
+import OneObservation from './screens/OneObservation';
 
 import CreateAccount from './screens/CreateAccount';
 import LogIn from './screens/LogIn';
@@ -40,7 +41,9 @@ const SignInStack = () => {
         <Stack.Screen name="AddSexAndQuantity" component={AddSexAndQuantity} ></Stack.Screen>
         <Stack.Screen name="AddWeather" component={AddWeather} ></Stack.Screen>
         <Stack.Screen name="Added Observations" component={AddedObservations}></Stack.Screen>
+        <Stack.Screen name="OneObservation" component={OneObservation}></Stack.Screen>
       </Stack.Navigator>
+
     </NavigationContainer>
   )
 
@@ -64,7 +67,7 @@ export default function App() {
 
   // Handle user state changes
   const onAuthStateChanged = (result) => {
-    console.log(result)
+    //console.log(result)
     setUser(result)
     if (initializing) setInitializing(false)
   }

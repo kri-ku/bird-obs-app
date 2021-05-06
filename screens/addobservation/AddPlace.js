@@ -5,6 +5,8 @@ import { Button, Input } from 'react-native-elements';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import API_KEY from '../../apikey'
+import NextButton from '../../components/NextButton'
+import AddingHeader from '../../components/AddingHeader'
 
 // loading map is slow
 
@@ -35,7 +37,6 @@ export default function AddPlace({ route, navigation }) {
         setLocation({ ...location, latitude: e.nativeEvent.coordinate.latitude, longitude: e.nativeEvent.coordinate.longitude })
         await fetchAddress()
     }
-
     const fetchAddress = async () => {
         try {
             const url = `http://www.mapquestapi.com/geocoding/v1/reverse?key=${API_KEY.API_KEY}&location=${location.latitude},${location.longitude}&includeRoadMetadata=true&includeNearestIntersection=true`
@@ -62,15 +63,7 @@ export default function AddPlace({ route, navigation }) {
 
     return (
         <View style={styles.container}>
-
-            <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, marginTop: 30 }}>
-                <Text style={{ color: '#C7BABA' }}>Add bird 3/6</Text>
-                <Text style={styles.headerAndButtonText}>Add place</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('home')}>
-                    <Text style={styles.cancelButton}>Back to Home</Text>
-                </TouchableOpacity>
-            </View>
-
+            <AddingHeader pagenumber={"3"} header={"Add place"}></AddingHeader>
             <Input
                 value={address}
                 onChangeText={text => setAddress(text)}
@@ -98,7 +91,7 @@ export default function AddPlace({ route, navigation }) {
 
                     </MapView>
                 )}
-            <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} titleStyle={styles.headerAndButtonText} title="Next" onPress={navigateToAddTime}></Button>
+            <NextButton title="Next" onPress={navigateToAddTime}></NextButton>
         </View>
     )
 }
@@ -106,27 +99,14 @@ export default function AddPlace({ route, navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#D7ECEF',
         alignItems: 'center',
         justifyContent: 'flex-start',
-    },
-    nextbutton: {
-        width: 150,
-        margin: 10,
-        borderRadius: 10,
-        backgroundColor: '#C7BABA'
     },
     map: {
         flex: 1,
         height: 400,
         width: '100%'
-    },
-    headerAndButtonText: {
-        letterSpacing: 1.5,
-        fontSize: 15
-    },
-    cancelButton: {
-        color: 'red',
-        letterSpacing: 1
-    },
+    }
+
 });

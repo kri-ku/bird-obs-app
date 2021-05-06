@@ -1,26 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Alert } from 'react-native';
+import { StyleSheet, View, Alert, ImageBackground } from 'react-native';
 import { Header } from 'react-native-elements';
 import { Button } from 'react-native-elements';
-import { getUserData, signOut } from '../firebase'
-import { useIsFocused } from '@react-navigation/native'
+import { getUserData, signOut, getObservations } from '../firebase';
 import { Icon } from 'react-native-elements';
 
-// showing name not working when first loading screen
 export default function Home({ navigation }) {
   const [uname, setUname] = useState('')
-  const isFocused = useIsFocused()
-
-  useEffect(() => {
-    setData() // fix this
-  }, [isFocused])
 
   const setData = async () => {
-    const udata = await getUserData()
-    console.log("UUDATA", udata)
-    setUname(await udata[0].username)
+    const data = await getUserData()
+    const data_object = await data[0]
+    setUname(data_object.username)
   }
+
+  useEffect(() => {
+    setData()
+  }, [])
 
   const Observation = {
     photoName: '',
@@ -32,7 +29,7 @@ export default function Home({ navigation }) {
     weather: []
   }
 
-  const askIfLogOut = () => {
+  const confirmLogOut = () => {
     Alert.alert("Do you really want to log out?",
       "You will be logged out from the app but the data is saved.",
       [
@@ -47,13 +44,13 @@ export default function Home({ navigation }) {
       ])
   }
 
-  //  {/*rightComponent={<Image resizeMode='contain' style={{ height: 80, width: 80 }} source={require('../pictures/circle-cropped.png')}></Image>}
   return (
-    <View style={styles.container}>
-      <Header placement="left" style={{ alignItems: 'center', justifyContent: 'center' }}
+    <ImageBackground source={require('../pictures/anthony-delanoix-btQt9i0Krag-unsplash.jpg')} style={styles.background}>
+
+      <Header placement="left" style={styles.header}
         containerStyle={{ backgroundColor: '#C7BABA', height: 120 }}
-        centerComponent={{ text: `Hello ${uname}!`, style: { width: 150, color: 'white', fontSize: 20, letterSpacing: 1.5 } }}
-        leftComponent={<Icon type="font-awesome-5" color="white" name="caret-square-down" onPress={() => askIfLogOut()} ></Icon>}></Header>
+        centerComponent={{ text: `Hello ${uname}!`, style: { fontWeight: 'bold', width: 300, color: 'white', fontSize: 25, letterSpacing: 3 } }}
+        leftComponent={<Icon type="font-awesome-5" color="white" name="caret-square-down" onPress={() => confirmLogOut()} ></Icon>}></Header>
 
 
       <View style={{ flex: 1, justifyContent: 'center' }}>
@@ -61,7 +58,7 @@ export default function Home({ navigation }) {
         <Button buttonStyle={styles.button} titleStyle={styles.buttonText} title="See observations" onPress={() => navigation.navigate('Added Observations')}></Button>
         <StatusBar style="auto" />
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -73,19 +70,16 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    flex: 0.3,
-    marginTop: 50
+    alignItems: 'center',
+    justifyContent: 'center'
   },
+
   button: {
     width: 300,
     height: 200,
     margin: 10,
     borderRadius: 10,
     backgroundColor: '#C7BABA',
-
   },
   text: {
     letterSpacing: 2
@@ -93,5 +87,13 @@ const styles = StyleSheet.create({
   buttonText: {
     letterSpacing: 1.1,
     color: 'white'
+  },
+  background: {
+    flex: 1,
+    resizeMode: "cover",
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
   }
 });

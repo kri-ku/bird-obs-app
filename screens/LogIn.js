@@ -48,7 +48,7 @@ export default function Login({ navigation }) {
     return (
         <KeyboardAvoidingView style={styles.container}>
 
-            {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}>*/}
+            {/* <TouchableWithoutFeedback oconst isFocused = useIsFocused()nPress={Keyboard.dismiss}>*/}
 
             {/*<ImageBackground source={require('../pictures/billy-huynh-sky.jpg')} style={styles.image}>*/}
             <Image resizeMode='contain' style={{ height: 150, width: 150 }} source={require('../pictures/circle-cropped-small.png')}></Image>
@@ -61,6 +61,7 @@ export default function Login({ navigation }) {
                     value={email}
                     onChangeText={email => setEmail(email)}
                     autoCapitalize='none'
+                    returnKeyType="done"
                     leftIcon={
                         <Icon
                             name='user'
@@ -73,6 +74,7 @@ export default function Login({ navigation }) {
                     value={password}
                     onChangeText={password => setPassword(password)}
                     autoCapitalize='none'
+                    returnKeyType="done"
                     leftIcon={
                         <Icon
                             name='lock'
@@ -112,6 +114,7 @@ const styles = StyleSheet.create({
         resizeMode: "cover",
         justifyContent: "flex-start",
         alignItems: 'center',
+        paddingTop: 20
     },
     image: {
         //flex: 1,

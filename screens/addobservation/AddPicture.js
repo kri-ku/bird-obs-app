@@ -3,8 +3,10 @@ import React, { useRef, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Alert, TouchableOpacity } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import { Camera } from 'expo-camera';
-import * as ImagePicker from 'expo-image-picker'
-import { savePicture, getImageDownloadUri } from '../../firebase'
+import * as ImagePicker from 'expo-image-picker';
+import { savePicture, getImageDownloadUri } from '../../firebase';
+import NextButton from '../../components/NextButton';
+import AddingHeader from '../../components/AddingHeader';
 
 export default function AddPicture({ route, navigation }) {
 
@@ -87,7 +89,6 @@ export default function AddPicture({ route, navigation }) {
                 <Button title="Take picture" onPress={snap}></Button>
             </View>
         )
-
     }
 
     const renderFrontPage = () => {
@@ -104,7 +105,7 @@ export default function AddPicture({ route, navigation }) {
                         <Text style={{ color: '#C7BABA' }}>Upload picture!</Text>
                     </View>
                 </View>
-                <Button buttonStyle={styles.nextbutton} titleStyle={{ color: 'white' }} title="No photo" onPress={() => navigation.navigate('AddName', { observation: Observation })}></Button>
+                <NextButton title={"No photo"} onPress={() => navigation.navigate('AddName', { observation: Observation })}></NextButton>
             </View>
         )
     }
@@ -117,8 +118,8 @@ export default function AddPicture({ route, navigation }) {
                 </View>
                 <Image resizeMode='contain' style={{ height: 450, width: 450 }} source={{ uri: photoName }}></Image>
                 <View style={{ flexDirection: 'row' }}>
-                    <Button title="Take new" buttonStyle={styles.nextbutton} titleStyle={styles.headerAndButtonText} onPress={() => handlePictureCancel()}></Button>
-                    <Button title="Confirm" buttonStyle={styles.nextbutton} titleStyle={styles.headerAndButtonText} onPress={() => savePictureToDatabase()}></Button>
+                    <NextButton title={"Take new"} onPress={() => handlePictureCancel()}></NextButton>
+                    <NextButton title={"Confirm"} onPress={() => savePictureToDatabase()}></NextButton>
                 </View>
             </View>
         )
@@ -130,15 +131,7 @@ export default function AddPicture({ route, navigation }) {
     } else {
         return (
             <View style={styles.container}>
-
-                <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, marginTop: 30 }}>
-                    <Text style={{ color: '#C7BABA' }}>Add bird 1/6</Text>
-                    <Text style={styles.headerAndButtonText}>Do you have a picture of your observation?</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate('home')}>
-                        <Text style={styles.cancelButton}>Back to Home</Text>
-                    </TouchableOpacity>
-                </View>
-
+                <AddingHeader pagenumber={"1"} header={"Do you have a picture of your observation?"}></AddingHeader>
                 {photoTaken ? renderPicture()
                     : (
                         <View>
@@ -149,21 +142,14 @@ export default function AddPicture({ route, navigation }) {
             </View>
         )
     }
-
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#D7ECEF',
         alignItems: 'center',
         justifyContent: 'flex-start',
-    },
-    nextbutton: {
-        width: 150,
-        margin: 10,
-        borderRadius: 10,
-        backgroundColor: '#C7BABA'
     },
     choicebutton: {
         width: 150,
@@ -179,15 +165,13 @@ const styles = StyleSheet.create({
         height: 180,
         alignItems: 'center',
         justifyContent: 'center',
-        margin: 10
-    },
-    cancelButton: {
-        color: 'red',
-        letterSpacing: 1
+        margin: 10,
+        backgroundColor: 'white'
     },
     text: {
         letterSpacing: 2,
         marginBottom: 6
     },
+
 
 });
