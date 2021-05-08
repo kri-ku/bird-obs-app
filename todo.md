@@ -1,7 +1,0 @@
-- reload app.js
-- reload AddedObservations
-- try app with more users
-- fix map to load faster?
-- keyboardavoiding view to login?
-- pictures are loading super slow
-- should pictures be uploaded when app is opened?

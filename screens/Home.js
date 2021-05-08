@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Alert, ImageBackground } from 'react-native';
 import { Header } from 'react-native-elements';
 import { Button } from 'react-native-elements';
-import { getUserData, signOut, getObservations } from '../firebase';
+import { getUserData, signOut } from '../firebase';
 import { Icon } from 'react-native-elements';
 
 export default function Home({ navigation }) {

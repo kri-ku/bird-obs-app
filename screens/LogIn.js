@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Image, KeyboardAvoidingView, TouchableOpacity }
 import { Input, Button } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { signIn } from '../firebase'
-
+//forgot your password not working yet
 export default function Login({ navigation }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')

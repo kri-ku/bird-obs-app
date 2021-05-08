@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { Alert } from 'react-native';
-import { KeyboardAvoidingView } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import { Input, Button } from 'react-native-elements'
 import { TouchableOpacity } from 'react-native-gesture-handler';

@@ -14,10 +14,7 @@ const firebaseConfig = {
   databaseURL: passwordfile.databaseURL,
   projectId: passwordfile.projectId,
   storageBucket: passwordfile.storageBucket,
-  // gs://bird-observation-app.appspot.com
   messagingSenderId: passwordfile.messagingSenderId,
-  //appId: 'app-id',
-  //measurementId: 'G-measurement-id',
 };
 
 firebase.initializeApp(firebaseConfig)
@@ -27,8 +24,10 @@ const authentication = firebase.auth()
 
 const saveObservation = async (Observation) => {
   const ref = database.child(`observations/${authentication.currentUser.uid}`)
-  await ref.push(
+  const key = (await ref.push()).key
+  await ref.child(key).set(
     {
+      "id": key,
       'photoname': Observation.photoname || "",
       'species': Observation.species || "",
       'place': Observation.place || "",
@@ -65,15 +64,6 @@ const getObservations = async () => {
     obs = Object.values(data)
   })
   return obs
-
-
-
-  /*database.child(`observations/${authentication.currentUser.uid}`).on('value', snapshot => {
-    const data = snapshot.val()
-    obs = Object.values(data)
-    //console.log("DATA FIREBASESSA", obs)
-  })
-  return obs*/
 }
 
 const getUserData = async () => {
@@ -83,50 +73,12 @@ const getUserData = async () => {
     const data = await snapshot.val()
     userdata = Object.values(data)
   })
-  console.log("USERDATA FIREBASESA", userdata)
   return userdata
-  /*database.child(`users/${authentication.currentUser.uid}`).on('value', snapshot => {
-    const data = snapshot.val()
-    userdata = Object.values(data)
-  })
-  return userdata*/
-
-
 }
 
-/*const getObservationById = (id) => {
-  let obs = ''
-  database.child(`observations/${authentication.currentUser.uid}/${id}`).on('value', snapshot => {
-    const data = snapshot.val()
-    obs = Object.values(data)
-  })
-  //console.log("DATA FIREBASESSA YKS", obs)
-  return obs
+const removeItem = (id) => {
+  database.child(`observations/${authentication.currentUser.uid}/${id}`).set(null)
 }
-*/
-
-const removeItem = (time) => {
-  //.child("place").child(placeId).removeValue();
-  let value = database.child(`observations/${authentication.currentUser.uid}`).child(`timestamp/${time}`)
-  console.log("VALUE FIREBASESA", value)
-  value.removeValue()
-
-  /*applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-      @Override
-      public void onDataChange(DataSnapshot dataSnapshot) {
-          for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-              appleSnapshot.getRef().removeValue();
-          }
-      }
-  
-      @Override
-      public void onCancelled(DatabaseError databaseError) {
-          Log.e(TAG, "onCancelled", databaseError.toException());
-      }
-  });*/
-}
-
-
 
 const getImageDownloadUri = async (imageName) => {
   var ref = storage.child(`images/${authentication.currentUser.uid}/${imageName}`)

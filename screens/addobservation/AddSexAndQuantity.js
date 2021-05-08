@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, ButtonGroup } from 'react-native-elements';
+import { ButtonGroup } from 'react-native-elements';
 import NumericInput from 'react-native-numeric-input';
 import NextButton from '../../components/NextButton';
 import AddingHeader from '../../components/AddingHeader';

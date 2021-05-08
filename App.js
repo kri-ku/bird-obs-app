@@ -1,11 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState, createContext } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './screens/Home';
-//import CreateAccount from './screens/CreateAccount';
 
 import AddPicture from './screens/addobservation/AddPicture';
 import AddName from './screens/addobservation/AddName';
@@ -21,7 +19,6 @@ import LogIn from './screens/LogIn';
 
 import { authentication } from './firebase'
 
-const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export const AuthContext = createContext(null)
@@ -43,10 +40,8 @@ const SignInStack = () => {
         <Stack.Screen name="Added Observations" component={AddedObservations}></Stack.Screen>
         <Stack.Screen name="OneObservation" component={OneObservation}></Stack.Screen>
       </Stack.Navigator>
-
     </NavigationContainer>
   )
-
 }
 
 const SignOutStack = () => {
@@ -60,22 +55,17 @@ const SignOutStack = () => {
   )
 }
 
-
 export default function App() {
   const [initializing, setInitializing] = useState(true)
   const [user, setUser] = useState(null)
 
-  // Handle user state changes
   const onAuthStateChanged = (result) => {
-    //console.log(result)
     setUser(result)
     if (initializing) setInitializing(false)
   }
 
   useEffect(() => {
     const authSubscriber = authentication.onAuthStateChanged(onAuthStateChanged)
-
-    // unsubscribe on unmount
     return authSubscriber
   }, [])
 

@@ -1,35 +1,33 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
 
-export default function AddingHeader({ pagenumber, header }) {
+
+export default function StickyHeader({ heading }) {
     const navigation = useNavigation()
     return (
         <View style={styles.header}>
-            <Text style={{ color: '#C7BABA' }}>Add bird {pagenumber}/6</Text>
-            <Text style={styles.headerAndButtonText}>{header}</Text>
+            <Text style={styles.headerAndButtonText}>{heading}</Text>
             <TouchableOpacity onPress={() => navigation.navigate('home')}>
                 <Text style={styles.cancelButton}>Back to Home</Text>
             </TouchableOpacity>
         </View>
     )
-
 }
 const styles = StyleSheet.create({
     header: {
         width: '100%',
         height: 110,
-        paddingTop: 40,
-        marginBottom: 20,
+        paddingTop: 50,
         backgroundColor: 'white',
-        paddingLeft: 5
-    },
-    headerAndButtonText: {
-        letterSpacing: 1.5,
-        fontSize: 15
+        paddingLeft: 6
     },
     cancelButton: {
         color: 'red',
         letterSpacing: 1
     },
+    headerAndButtonText: {
+        letterSpacing: 1.5,
+        fontSize: 15
+    }
 })

@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, View, Alert, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import { removeItem } from '../firebase'
+import StickyHeader from '../components/StickyHeader'
 
 export default function OneObservation({ route, navigation: { goBack } }) {
     const { observation } = route.params
@@ -18,34 +19,47 @@ export default function OneObservation({ route, navigation: { goBack } }) {
         }
     }
 
+    const confirmRemove = () => {
+        Alert.alert("Are you sure you want to remove this observation?",
+        "Observation will be permanently deleted.",
+            [
+                {
+                    text: 'Cancel'
+                },
+                {
+                    text: 'Confirm',
+                    onPress: () => removeItemAndGoBack()
+                }
+            ])
+    }
+
     const removeItemAndGoBack = () => {
-        removeItem(observation.timestamp)
-        console.log(observation.timestamp)
+        removeItem(observation.id)
         goBack()
     }
 
-
     return (
-        <View styles={styles.container}>
-            <View style={{ width: '100%', marginLeft: 10, marginBottom: 20, marginTop: 40 }}>
-                <Text style={styles.headerAndButtonText}>{observation.species}</Text>
-                <TouchableOpacity onPress={() => goBack()}>
-                    <Text style={styles.cancelButton}>Back to List</Text>
-                </TouchableOpacity>
-            </View>
-            <ScrollView contentContainerStyle={styles.ScrollView}>
-                {observation.photoname !== "" ? (<Image transition={false} resizeMode='contain' style={styles.image} source={{ uri: observation.photoname }}></Image>) : (<Image transition={false} resizeMode='contain' style={styles.image} source={require('../pictures/avatar3.png')}></Image>)}
+
+        <ScrollView
+            stickyHeaderIndices={[0]}>
+            <StickyHeader heading={observation.species}></StickyHeader>
+            <View style={{ alignItems: 'center' }}>
+
+                {observation.photoname !== "" ?
+                    (<Image transition={false} resizeMode='contain' style={styles.image} source={{ uri: observation.photoname }}></Image>)
+                    : (<Image transition={false} resizeMode='contain' style={styles.image} source={require('../pictures/avatar3.png')}></Image>)}
+
                 <Text style={styles.text}>{splitdate(observation.time)}</Text>
                 <Text style={styles.text}>{observation.place}</Text>
                 <Text style={styles.text}>{observation.quantity}, {observation.sex}</Text>
                 <Text style={styles.text}>Weather was:</Text>
                 {returnweather(observation.weather)}
 
-                <TouchableOpacity onPress={() => removeItemAndGoBack()} style={{ marginTop: 30 }}>
+                <TouchableOpacity onPress={() => confirmRemove()} style={{ marginTop: 30, marginBottom: 20 }}>
                     <Text style={styles.cancelButton}>remove</Text>
                 </TouchableOpacity>
-            </ScrollView>
-        </View>
+            </View>
+        </ScrollView>
     )
 }
 
@@ -69,19 +83,12 @@ const styles = StyleSheet.create({
         width: 450,
         margin: 10,
         marginBottom: 20
-
-    },
-    ScrollView: {
-        alignItems: 'center',
-        justifyContent: 'center'
     },
     text: {
         letterSpacing: 2,
         margin: 5
-
     },
     text: {
         letterSpacing: 2
-    },
-
+    }
 });

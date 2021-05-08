@@ -1,9 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import { getObservations } from '../firebase'
 import { useIsFocused } from '@react-navigation/native'
+import StickyHeader from '../components/StickyHeader'
+
 
 export default function AddedObservations({ navigation, route }) {
     const [data, setData] = useState([])
@@ -17,6 +19,10 @@ export default function AddedObservations({ navigation, route }) {
     useEffect(() => {
         setObservations()
     }, [])
+
+    useEffect(() => {
+        setObservations()
+    }, [isFocused])
 
 
     const renderImageComponent = (address) => {
@@ -46,27 +52,14 @@ export default function AddedObservations({ navigation, route }) {
                     <ListItem.Title style={{ letterSpacing: 2, fontWeight: 'bold' }}>{observation.species}</ListItem.Title>
                     <ListItem.Subtitle style={{ letterSpacing: 2 }}>{splitdate(observation.time)}</ListItem.Subtitle>
                 </ListItem.Content>
-
                 <ListItem.Chevron></ListItem.Chevron>
             </ListItem>
-
-        )
-    }
-
-    const Header = () => {
-        return (
-            <View style={styles.header}>
-                <Text style={styles.headerAndButtonText}>Welcome to see your observations</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('home')}>
-                    <Text style={styles.cancelButton}>Back to Home</Text>
-                </TouchableOpacity>
-            </View>
         )
     }
     return (
         <View>
             {data !== [] ? (<FlatList
-                ListHeaderComponent={<Header></Header>}
+                ListHeaderComponent={<StickyHeader heading={"These are your observations"}></StickyHeader>}
                 stickyHeaderIndices={[0]}
                 data={data}
                 renderItem={({ item, index }) => renderItem(item, index)}
